@@ -1,0 +1,42 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Libros</title>
+    <link rel="stylesheet" href="estilos.css">
+
+</head>
+<body>
+
+    <div class="contenedor-tema">
+        <button class="boton-tema" onclick="cambiarTema()">Cambiar Tema</button>
+    </div>
+
+    <section>
+
+        <div class="contenedor">
+            <h1>Agregar Libros</h1>
+            <div class="grupo-input">
+                <input type="text" id="inputTitulo" placeholder="Título del libro">
+                <input type="text" id="inputAutor" placeholder="Autor del libro">
+                <button onclick="agregarLibro()">Agregar Libro</button>
+            </div>
+
+            <div class="grupo-busqueda">
+                <h2>Buscar Libro</h2>
+                <input type="text" id="inputBuscar" placeholder="Buscar por título">
+                <button onclick="buscarLibro()">Buscar</button>
+            </div>
+
+            <h2>Lista de Libros</h2>
+            <ul id="listaLibros"></ul>
+
+            <button class="boton-limpiar" onclick="limpiarLibros()">Limpiar Lista</button>
+        </div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+</html>
