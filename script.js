@@ -2,9 +2,11 @@
 let libros = [];
 
 // Constructor de Libro
-function Libro(titulo, autor) {
-    this.titulo = titulo;
-    this.autor = autor;
+class Libro {
+    constructor(titulo, autor) {
+        this.titulo = titulo;
+        this.autor = autor;
+    }
 }
 
 // Función para agregar un nuevo libro
@@ -17,7 +19,7 @@ function agregarLibro() {
         renderizarLibros();
         document.getElementById('inputTitulo').value = '';
         document.getElementById('inputAutor').value = '';
-        
+
         Swal.fire({
             title: '<span style="color: green;">¡Libro Agregado!</span>',
             text: `${titulo} de ${autor} ha sido agregado a la lista.`,
@@ -35,7 +37,7 @@ function agregarLibro() {
 }
 
 // Función para renderizar los libros en el DOM
-function renderizarLibros(lista = libros) {
+const renderizarLibros = (lista = libros) => {
     const listaLibros = document.getElementById('listaLibros');
     listaLibros.innerHTML = '';
     lista.forEach((libro, index) => {
@@ -54,56 +56,75 @@ function renderizarLibros(lista = libros) {
 }
 
 // Función para buscar libros por título
-function buscarLibro() {
+const buscarLibro = () => {
     const buscarTitulo = document.getElementById('inputBuscar').value.trim().toLowerCase();
     const librosEncontrados = libros.filter(libro => libro.titulo.toLowerCase().includes(buscarTitulo));
     renderizarLibros(librosEncontrados);
 }
 
 // Función para limpiar toda la lista de libros
-function limpiarLibros() {
+const limpiarLibros = () => {
     libros = [];
     guardarLibros();
     renderizarLibros();
 }
 
 // Función para guardar los libros en localStorage
-function guardarLibros() {
+const guardarLibros = () => {
     localStorage.setItem('libros', JSON.stringify(libros));
 }
 
 // Función para cargar los libros desde localStorage
-function cargarLibros() {
+const cargarLibros = () => {
     const librosGuardados = localStorage.getItem('libros');
     if (librosGuardados) {
         libros = JSON.parse(librosGuardados);
     }
 }
 
-// Cargar los libros y renderizarlos al iniciar la aplicación
-window.onload = function() {
-    cargarLibros();
-    renderizarLibros();
-    cargarTema();
-};
-
 // Función para cambiar el tema
-function cambiarTema() {
+const cambiarTema = () => {
     const body = document.body;
     body.classList.toggle('modo-oscuro');
     guardarTema();
 }
 
 // Función para guardar el tema en localStorage
-function guardarTema() {
+const guardarTema = () => {
     const esModoOscuro = document.body.classList.contains('modo-oscuro');
     localStorage.setItem('modoOscuro', esModoOscuro);
 }
 
 // Función para cargar el tema desde localStorage
-function cargarTema() {
+const cargarTema = () => {
     const esModoOscuro = JSON.parse(localStorage.getItem('modoOscuro'));
     if (esModoOscuro) {
         document.body.classList.add('modo-oscuro');
     }
 }
+
+// Función asincrónica para cargar libros desde una API externa
+const cargarLibrosDesdeAPI = async () => {
+    try {
+        const response = await fetch('https://api.example.com/libros');
+        const data = await response.json();
+        libros = data.map(libro => new Libro(libro.titulo, libro.autor));
+        guardarLibros();
+        renderizarLibros();
+    } catch (error) {
+        Swal.fire({
+            title: '<span style="color: red;">Error</span>',
+            text: 'No se pudieron cargar los libros desde la API.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+// Cargar los libros y renderizarlos al iniciar la aplicación
+window.onload = () => {
+    cargarLibros();
+    renderizarLibros();
+    cargarTema();
+    cargarLibrosDesdeAPI();  // Cargar libros desde la API al inicio
+};
